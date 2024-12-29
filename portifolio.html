@@ -7,50 +7,375 @@
     <title>Bem Vindo ao Mundo de B Design</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+      body {
+    margin: 0;
+    font-family: Comfortaa, sans-serif;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+}
+
+/* Ajuste para o header */
+.header {
+    position: relative;
+    z-index: 2; /* Certifica-se que o header fique por cima de outros elementos */
+}
+
+/* Ajuste para o canvas */
+#smokeCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Fica no fundo */
+}
+#header-lottie {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    height: 500px;
+}
+
+.header-content {
+    text-align: center;
+}
+
+/* Sidebar */
+nav.sidebar {
+    width: 100px;
+    height: 100vh;
+    background-color: #000000;
+    border-right: 2px solid #53ffdd;
+    box-shadow: 0 0 15px #53ffdd;
+    padding: 40px 0 0 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    transition: .3s;
+    z-index: 1000;
+}
+
+nav.sidebar.expandir {
+    width: 200px;
+}
+
+/* Ajuste para os lotties e conteúdo principal */
+.lottie-container, .main-section, .content-section {
+    margin-left: 90px;
+    transition: margin-left .3s;
+}
+
+nav.sidebar.expandir ~ .lottie-container,
+nav.sidebar.expandir ~ .main-section,
+nav.sidebar.expandir ~ .content-section {
+    margin-left: 200px;
+}
+
+.btn-expandir {
+    width: 100%;
+    padding-left: 40px;
+    margin-bottom: 40px;
+}
+
+.btn-expandir > i {
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+
+.btn-expandir {
+    margin: 0 auto;
+}
+
+ul {
+    height: 100%;
+    list-style-type: none;
+}
+
+ul li.item-menu {
+    transition: .3s;
+}
+
+/* Regra para quando o item está ativo */
+ul li.ativo {
+    background-color: #53ffdd;
+}
+
+ul li.ativo a,
+ul li.ativo .icon i {
+    color: #000000 !important; /* Preto para o texto e o ícone */
+}
+
+/* Estilo padrão para os links */
+ul li.item-menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 15px 1%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo para hover */
+ul li.item-menu:hover {
+    background: #53ffdd;
+}
+
+ul li.item-menu:hover a,
+ul li.item-menu:hover .icon i {
+    color: #000000;
+}
+
+ul li.item-menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 15px 1%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+ul li.item-menu a .icon {
+    margin-right: 20px;
+}
+
+ul li.item-menu a .txt-link {
+    margin-left: 10px;
+}
+
+ul li.item-menu a .icon > i {
+    font-size: 30px;
+    line-height: 40px;
+}
+
+/* Header */
+.header {
+    height: 40px;
+    background-color: #2e2e2e;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #53ffdd;
+}
+
+.header-content {
+    text-align: center;
+}
+
+.header-title {
+    font-size: 20px;
+    color: #fff;
+    text-align: justify;
+}
+
+/* Seção principal */
+.main-section {
+    padding: 20px;
+    text-align: center;
+}
+
+.main-section h1 {
+    font-size: 40px;
+    color: #ffef00;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.main-section p {
+    font-size: 25px;
+    color: #fff;
+    text-align: center;
+}
+
+/* Conteúdo principal */
+.content-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.content-section img {
+    width: 100%;
+    height: auto;
+}
+
+/* Lottie container */
+.lottie-container {
+    display: flex;
+    flex-direction: column; /* Alinha lotties em linhas diferentes */
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Espaçamento entre os lotties */
+}
+
+.lottie-item {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+}
+
+/* Responsividade para telas maiores */
+@media (min-width: 768px) {
+    .lottie-container {
+        flex-direction: row; /* Muda para linha nas telas maiores */
+    }
+
+    .lottie-item {
+        flex: 1;
+        max-width: 400px;
+    }
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 767px) {
+    .header-title {
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .main-section h1 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .main-section p {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .content-section, .lottie-container {
+        flex-direction: column;
+    }
+
+    .content-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        margin-top: 20px; /* Espaço adicional para evitar sobreposição */
+        text-align: center;
+    }
+    
+    .main-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px; /* Espaço para o menu */
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .content-section, .main-section {
+        margin-left: 0;
+    }
+}
+
+/* Blog Container */
+.blog-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    justify-items: center;
+}
+
+.blog-card {
+    width: 100%;
+    max-width: 300px;
+    border: 2px solid #53ffdd; /* Borda com cor personalizada */
+    border-radius: 10px; /* Bordas arredondadas */
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(83, 255, 221, 0.7); /* Sombra sólida na cor especificada */
+}
+
+.blog-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 2px solid #53ffdd; /* Linha de separação entre imagem e título */
+}
+
+.blog-card h3 {
+    margin: 0;
+    padding: 15px;
+    font-size: 18px;
+    color: #53ffdd; /* Cor do título */
+}
+
+@media (max-width: 768px) {
+    .blog-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .blog-container {
+        grid-template-columns: 1fr;
+        gap: 10px; /* Reduzindo o espaçamento em telas menores */
+    }
+}
+
+/* Footer */
+.footer {
+    background-color: #2e2e2e;
+    text-align: center;
+    padding: 20px;
+}
+
+.footer-content {
+    font-size: 14px;
+    color: #fff;
+}
+
+    </style>
 </head>
 <body>
     <canvas id="smokeCanvas"></canvas>
     <nav class="sidebar">
         <div class="btn-expandir">
-            <i class="bi bi-list" id="btn-exp"></i>
+            <i class="bi bi-list"></i>
         </div>
         <ul>
-            <li class="item-menu">
+            <li class="item-menu ativo">
                 <a href="index.html">
-                    <span class="icon"><i class="bi bi-house-fill"></i></span>
-                    <span class="txt-link">Home</span>
+                    <i class="bi bi-house-fill"></i> <span>Home</span>
                 </a>
             </li>
-            <li class="item-menu ativo">
-                <a href="portifolio.html">
-                    <span class="icon"><i class="bi bi-lightbulb-fill"></i></span>
-                    <span class="txt-link">Portfólio</span>
+            <li class="item-menu">
+                <a href="portfolio.html">
+                    <i class="bi bi-lightbulb-fill"></i> <span>Portfólio</span>
                 </a>
-            </li>            
+            </li>
             <li class="item-menu">
                 <a href="blog.html">
-                    <span class="icon"><i class="bi bi-journal-bookmark-fill"></i></span>
-                    <span class="txt-link">Blog</span>
+                    <i class="bi bi-journal-bookmark-fill"></i> <span>Blog</span>
                 </a>
             </li>
             <li class="item-menu">
                 <a href="contato.html">
-                    <span class="icon"><i class="bi bi-phone-vibrate-fill"></i></span>
-                    <span class="txt-link">Contato</span>
+                    <i class="bi bi-phone-vibrate-fill"></i> <span>Contato</span>
                 </a>
             </li>
         </ul>
     </nav>
     <header class="header">
-        <div class="header-content">
-            <span class="header-title">Transformamos ideias em realidade</span>
-        </div>
+        <span class="header-title">Transformamos ideias em realidade</span>
     </header>
-            <div class="lottie-container">
-                <lottie-player id="lottie4" src="https://lottie.host/57124dde-ce2b-4669-afda-bc216da2032b/y13ygYAY78.json" background="transparent"></lottie-player>
-            </div>      
-    </section>
     <main class="content">
         <section class="main-section">
             <div class="lottie-container">
@@ -66,9 +391,151 @@
         </div>
     </footer>
 
-    <!-- Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const btnExpandir = document.querySelector(".btn-expandir");
+    const sidebar = document.querySelector(".sidebar");
+    const menuItems = document.querySelectorAll("ul li.item-menu");
 
+    btnExpandir.addEventListener("click", function() {
+        sidebar.classList.toggle("expandir");
+    });
+
+    menuItems.forEach(function(item) {
+        item.addEventListener("click", function() {
+            // Remove a classe ativo de todos os itens
+            menuItems.forEach(function(menuItem) {
+                menuItem.classList.remove("ativo");
+            });
+            // Adiciona a classe ativo ao item clicado
+            item.classList.add("ativo");
+        });
+    });
+
+    // Carregar as animações
+    var anim1 = lottie.loadAnimation({
+        container: document.getElementById('lottie1'),
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: 'https://lottie.host/a8d837bf-f53c-44a9-ac38-89a10bea62ff/AED9Pe29cS.json'
+    });
+
+    var anim2 = lottie.loadAnimation({
+        container: document.getElementById('lottie2'),
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: 'https://lottie.host/bcc4a533-79f0-4dca-a31b-41aa24b2746e/YhvtBMR1Rd.json'
+    });
+
+    var anim3 = lottie.loadAnimation({
+        container: document.getElementById('lottie3'),
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: 'https://lottie.host/ca043d56-1d85-4ef0-990a-a8cd772f7665/D1fTVglEg5.json'
+    });
+
+    var anim4 = lottie.loadAnimation({
+        container: document.getElementById('lottie4'),
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: 'https://lottie.host/57124dde-ce2b-4669-afda-bc216da2032b/y13ygYAY78.json'
+    });
+
+    // Adicionar eventos de hover para as animações
+    document.getElementById('lottie1').addEventListener('mouseenter', function() {
+        anim1.play();
+    });
+    document.getElementById('lottie1').addEventListener('mouseleave', function() {
+        anim1.stop();
+    });
+
+    document.getElementById('lottie2').addEventListener('mouseenter', function() {
+        anim2.play();
+    });
+    document.getElementById('lottie2').addEventListener('mouseleave', function() {
+        anim2.stop();
+    });
+
+    document.getElementById('lottie3').addEventListener('mouseenter', function() {
+        anim3.play();
+    });
+    document.getElementById('lottie3').addEventListener('mouseleave', function() {
+        anim3.stop();
+    });
+
+    document.getElementById('lottie4').addEventListener('mouseenter', function() {
+        anim4.play();
+    });
+    document.getElementById('lottie4').addEventListener('mouseleave', function() {
+        anim4.stop();
+    });
+});
+
+const canvas = document.getElementById('smokeCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const particlesArray = [];
+const colors = ['#8600ff', '#00ffdc'];
+
+// Função para criar uma nova partícula
+function Particle(x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = Math.random() * 20 + 10; // Tamanho aleatório entre 10 e 30
+    this.speedX = Math.random() * 3 - 1.5; // Velocidade de -1.5 a 1.5
+    this.speedY = Math.random() * 3 - 1.5;
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+}
+
+// Método para desenhar a partícula
+Particle.prototype.draw = function() {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+};
+
+// Método para atualizar a posição da partícula
+Particle.prototype.update = function() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.size > 0.2) this.size -= 0.1; // Gradualmente reduzir o tamanho
+};
+
+// Função para adicionar novas partículas
+function addParticles(event) {
+    const x = event.x;
+    const y = event.y;
+    for (let i = 0; i < 5; i++) {
+        particlesArray.push(new Particle(x, y));
+    }
+}
+
+// Função para animar as partículas
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+
+        // Remover partículas quando se tornam muito pequenas
+        if (particlesArray[i].size <= 0.2) {
+            particlesArray.splice(i, 1);
+            i--;
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+window.addEventListener('mousemove', addParticles);
+animate();
+    </script>
 </body>
 </html>
