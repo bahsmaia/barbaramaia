@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quem Somos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comfortaa', sans-serif;
+            background: black;
+            color: white;
+        }
+
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 350px;
+            background-color: white;
+            color: black;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        #popup h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        #popup p {
+            font-size: 16px;
+            margin: 15px 0;
+        }
+
+        #popup button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #btn-destruir, #btn-portfolio {
+            color: white;
+            width: 130px;
+            height: 45px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        #btn-destruir {
+            background-color: #8600ff;
+        }
+
+        #btn-portfolio {
+            background-color: #00ffdc;
+        }
+
+        #botoes-rodape {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        footer {
+            width: 100%;
+            padding: 20px;
+            background-color: #292929;
+            position: fixed;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 1px solid #53ffdd;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .firework-particle {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            width: 5px;
+            height: 5px;
+        }
+
+        @media (max-width: 600px) {
+            #btn-destruir, #btn-portfolio {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">Carregando...</div>
+
+    <div id="jogo-container" style="display: none;"></div>
+
+    <div id="popup">
+        <h1 id="popup-title">Parabéns! Você destruiu essa página!</h1>
+        <p id="popup-message">Levou apenas: <span id="time"></span> segundos</p>
+        <button onclick="closePopup()">Fechar</button>
+    </div>
+
+    <footer>
+        <div id="botoes-rodape">
+            <button id="btn-destruir">DESTRUIR</button>
+            <button id="btn-portfolio">
+                <a href="portifolio.html">PORTFÓLIO</a>
+            </button>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script>
+        let snake = [];
+        let snakeLength = 2;
+        let snakeSize = 10;
+        let direction = 'RIGHT';
+        let textChars = [];
+        let gameOver = false;
+        let startTime;
+        let gameStarted = false;
+        let fireworks = [];
+        let margin = 150;
+
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('jogo-container');
+            frameRate(15);
+            noCursor();
+            textAlign(CENTER, CENTER);
+            textSize(35);
+            startTime = millis();
+
+            let textToDisplay = "Sou Barbara Maia, designer gráfica e web. Transformando ideias em realidade visual, criando designs únicos que refletem a essência de cada marca. Ofereço soluções criativas e personalizadas, fortalecendo a comunicação visual dos meus clientes. Vamos conversar e descobrir como posso ajudar a elevar sua marca?";
+            let lines = formatText(textToDisplay, width - 250);
+            let totalTextHeight = lines.length * (textAscent() + textDescent());
+            let startY = (height - totalTextHeight) / 2;
+
+            textChars = [];
+            for (let i = 0; i < lines.length; i++) {
+                let currentLine = lines[i];
+                let currentX = width / 2 - textWidth(currentLine) / 2;
+                let currentY = startY + i * (textAscent() + textDescent());
+
+                for (let j = 0; j < currentLine.length; j++) {
+                    let char = currentLine[j];
+                    let charWidth = textWidth(char);
+                    textChars.push({ text: char, x: currentX, y: currentY, width: charWidth, height: textAscent() + textDescent() });
+                    currentX += charWidth;
+                }
+            }
+
+            // Inicializar a cobrinha
+            snake = [];
+            for (let i = 0; i < snakeLength; i++) {
+                snake.push(createVector(i * snakeSize, height / 2)); // Posição inicial no meio da tela
+            }
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('jogo-container').style.display = 'block';
+        }
+
+        function moveSnake() {
+            let head = snake[snake.length - 1].copy(); // Cabeça da cobra
+
+            if (direction === 'RIGHT') head.x += snakeSize;
+            else if (direction === 'LEFT') head.x -= snakeSize;
+            else if (direction === 'UP') head.y -= snakeSize;
+            else if (direction === 'DOWN') head.y += snakeSize;
+
+            // Verifica colisão com as bordas e com a própria cobra
+            if (head.x < 0 || head.x >= width || head.y < 0 || head.y >= height || snakeCollision(head)) {
+                gameOver = true;
+                return;
+            }
+
+            let ateSomething = false;
+            let buffer = 10;
+
+            for (let i = textChars.length - 1; i >= 0; i--) {
+                let t = textChars[i];
+                let charWidth = Math.max(t.width, 35);
+                let charHeight = Math.max(t.height, 40);
+
+                if (head.x < t.x + charWidth + buffer && head.x + snakeSize > t.x - buffer && 
+                    head.y < t.y + charHeight + buffer && head.y + snakeSize > t.y - buffer) {
+                    textChars.splice(i, 1);
+                    ateSomething = true;
+                    break;
+                }
+            }
+
+            snake.push(head);
+
+            if (!ateSomething) {
+                snake.shift();
+            }
+        }
+
+        function snakeCollision(head) {
+            for (let i = 0; i < snake.length - 1; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function draw() {
+            background(0);
+
+            if (!gameStarted) {
+                fill(255);
+                noStroke();
+                for (let t of textChars) {
+                    text(t.text, t.x, t.y);
+                }
+                return;
+            }
+
+            if (gameOver) {
+                background(0);
+                fill(255, 0, 0);
+                textAlign(CENTER, CENTER);
+                text("Game Over", width / 2, height / 2);
+
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+
+                if (textChars.length === 0) {
+                    createFireworks(); // Criar os fogos ao final
+                }
+                return;
+            }
+
+            if (textChars.length === 0) {
+                if (fireworks.length === 0) {
+                    createFireworks();
+                    document.getElementById('popup').style.display = 'block';
+                    let timeTaken = (millis() - startTime) / 1000;
+                    document.getElementById('time').innerText = timeTaken.toFixed(2);
+                }
+            }
+
+            noStroke();
+            for (let t of textChars) {
+                fill(255); // Mantendo a cor da fonte como branca
+                text(t.text, t.x, t.y);
+            }
+
+            for (let part of fireworks) {
+                part.update();
+                part.show();
+            }
+
+            moveSnake();
+
+            fill(83, 255, 221);
+            for (let i = 0; i < snake.length; i++) {
+                rect(snake[i].x, snake[i].y, snakeSize, snakeSize);
+            }
+        }
+
+        function keyPressed() {
+            if (keyCode === UP_ARROW && direction !== 'DOWN') direction = 'UP';
+            else if (keyCode === DOWN_ARROW && direction !== 'UP') direction = 'DOWN';
+            else if (keyCode === LEFT_ARROW && direction !== 'RIGHT') direction = 'LEFT';
+            else if (keyCode === RIGHT_ARROW && direction !== 'LEFT') direction = 'RIGHT';
+            if (!gameStarted) gameStarted = true;
+        }
+
+        function createFireworks() {
+            for (let i = 0; i < 100; i++) {
+                fireworks.push(new Firework(random(width), random(height)));
+            }
+        }
+
+        class Firework {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = random(-2, 2);
+                this.vy = random(-2, 2);
+                this.alpha = 255;
+                this.color = random([color(134, 0, 255), color(0, 255, 220)]);
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= 5;
+            }
+
+            show() {
+                noStroke();
+                fill(red(this.color), green(this.color), blue(this.color), this.alpha);
+                ellipse(this.x, this.y, 10);
+            }
+        }
+
+        document.getElementById('btn-destruir').addEventListener('click', () => {
+            anime({
+                targets: textChars,
+                x: function () {
+                    return anime.random(margin, width - margin);
+                },
+                y: function () {
+                    return anime.random(margin, height - margin);
+                },
+                easing: 'easeInOutExpo',
+                duration: 1500
+            });
+        });
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function formatText(str, maxWidth) {
+            let words = str.split(' ');
+            let formattedText = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                let word = words[i];
+                let width = textWidth(currentLine + ' ' + word);
+                if (width < maxWidth) {
+                    currentLine += ' ' + word;
+                } else {
+                    formattedText.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            formattedText.push(currentLine);
+            return formattedText;
+        }
+    </script>
+</body>
+</html>
