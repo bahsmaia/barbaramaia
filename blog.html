@@ -3,572 +3,471 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
+    <title>Quem Somos</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400&display=swap" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-        <style>
-body {
-    margin: 0;
-    font-family: Comfortaa, sans-serif;
-    padding: 0;
-    background-color: #000;
-    color: #fff;
-}
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comfortaa', sans-serif;
+            background: black;
+            color: white;
+        }
 
-/* Ajuste para o header */
-.header {
-    position: relative;
-    z-index: 2; /* Certifica-se que o header fique por cima de outros elementos */
-}
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-size: 24px;
+        }
 
-/* Ajuste para o canvas */
-#smokeCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0; /* Fica no fundo */
-}
-#header-lottie {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-    height: 500px;
-}
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 350px;
+            background-color: white;
+            color: black;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
 
-.header-content {
-    text-align: center;
-}
+        #popup h1 {
+            font-size: 20px;
+            margin: 0;
+        }
 
-/* Sidebar */
-nav.sidebar {
-    width: 100px;
-    height: 100vh;
-    background-color: #000000;
-    border-right: 2px solid #53ffdd;
-    box-shadow: 0 0 15px #53ffdd;
-    padding: 40px 0 0 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    transition: .3s;
-    z-index: 1000;
-}
+        #popup p {
+            font-size: 16px;
+            margin: 15px 0;
+        }
 
-nav.sidebar.expandir {
-    width: 200px;
-}
+        #popup button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
 
-/* Ajuste para os lotties e conteúdo principal */
-.lottie-container, .main-section, .content-section {
-    margin-left: 90px;
-    transition: margin-left .3s;
-}
+        #btn-destruir, #btn-portfolio {
+            color: white;
+            width: 130px;
+            height: 45px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
 
-nav.sidebar.expandir ~ .lottie-container,
-nav.sidebar.expandir ~ .main-section,
-nav.sidebar.expandir ~ .content-section {
-    margin-left: 200px;
-}
+        #btn-destruir {
+            background-color: #8600ff;
+        }
 
-.btn-expandir {
-    width: 100%;
-    padding-left: 40px;
-    margin-bottom: 40px;
-}
+        #btn-portfolio {
+            background-color: #8600ff;
+        }
 
-.btn-expandir > i {
-    color: #ffffff;
-    font-size: 24px;
-    cursor: pointer;
-}
+        #botoes-rodape {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap; /* Para telas pequenas, os botões podem quebrar linha */
+        }
 
-.sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-}
+        footer {
+            width: 100%;
+            padding: 10px;
+            background-color: #292929;
+            position: fixed;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 1px solid #53ffdd;
+        }
 
-.btn-expandir {
-    margin: 0 auto;
-}
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-ul {
-    height: 100%;
-    list-style-type: none;
-}
+        .firework-particle {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            width: 5px;
+            height: 5px;
+        }
 
-ul li.item-menu {
-    transition: .3s;
-}
+        /* Estilo dos botões direcionais */
+        #direcionais {
+            position: fixed;
+            bottom: 100px; /* Posicionado acima do rodapé */
+            left: 50%;
+            transform: translateX(-50%);
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left . right"
+                ". down .";
+            gap: 10px;
+        }
 
-/* Regra para quando o item está ativo */
-ul li.ativo {
-    background-color: #53ffdd;
-}
+        #btn-up, #btn-down, #btn-left, #btn-right {
+            background-color: #53ffdd;
+            border: none;
+            color: black;
+            font-size: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(83, 255, 221, 0.5);
+            transition: background-color 0.3s ease;
+        }
 
-ul li.ativo a,
-ul li.ativo .icon i {
-    color: #000000 !important; /* Preto para o texto e o ícone */
-}
+        #btn-up:hover, #btn-down:hover, #btn-left:hover, #btn-right:hover {
+            background-color: #40ccb3;
+        }
 
-/* Estilo padrão para os links */
-ul li.item-menu a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 20px;
-    padding: 15px 1%;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
+        #btn-up { grid-area: up; }
+        #btn-down { grid-area: down; }
+        #btn-left { grid-area: left; }
+        #btn-right { grid-area: right; }
 
-/* Estilo para hover */
-ul li.item-menu:hover {
-    background: #53ffdd;
-}
+        @media (max-width: 600px) {
+            #btn-destruir, #btn-portfolio {
+                width: 100px;
+                height: 40px;
+                font-size: 14px;
+                margin: 5px;
+            }
 
-ul li.item-menu:hover a,
-ul li.item-menu:hover .icon i {
-    color: #000000;
-}
+            #popup {
+                width: 90%;
+                padding: 15px;
+            }
 
-ul li.item-menu a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 20px;
-    padding: 15px 1%;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
+            #popup h1 {
+                font-size: 18px;
+            }
 
-ul li.item-menu a .icon {
-    margin-right: 20px;
-}
+            #popup p {
+                font-size: 14px;
+            }
 
-ul li.item-menu a .txt-link {
-    margin-left: 10px;
-}
+            #loading {
+                font-size: 18px;
+            }
 
-ul li.item-menu a .icon > i {
-    font-size: 30px;
-    line-height: 40px;
-}
-
-/* Header */
-.header {
-    height: 40px;
-    background-color: #2e2e2e;
-    background-size: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid #53ffdd;
-}
-
-.header-content {
-    text-align: center;
-}
-
-.header-title {
-    font-size: 20px;
-    color: #fff;
-    text-align: justify;
-}
-
-/* Seção principal */
-.main-section {
-    padding: 20px;
-    text-align: center;
-}
-
-.main-section h1 {
-    font-size: 40px;
-    color: #ffef00;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.main-section p {
-    font-size: 25px;
-    color: #fff;
-    text-align: center;
-}
-
-/* Conteúdo principal */
-.content-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.content-section img {
-    width: 100%;
-    height: auto;
-}
-
-/* Lottie container */
-.lottie-container {
-    display: flex;
-    flex-direction: column; /* Alinha lotties em linhas diferentes */
-    justify-content: center;
-    align-items: center;
-    gap: 20px; /* Espaçamento entre os lotties */
-}
-
-.lottie-item {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
-}
-
-/* Responsividade para telas maiores */
-@media (min-width: 768px) {
-    .lottie-container {
-        flex-direction: row; /* Muda para linha nas telas maiores */
-    }
-
-    .lottie-item {
-        flex: 1;
-        max-width: 400px;
-    }
-}
-
-/* Responsividade para telas menores */
-@media (max-width: 767px) {
-    .header-title {
-        font-size: 15px;
-        text-align: center;
-    }
-
-    .main-section h1 {
-        font-size: 20px;
-        text-align: center;
-    }
-
-    .main-section p {
-        font-size: 12px;
-        text-align: center;
-    }
-
-    .content-section, .lottie-container {
-        flex-direction: column;
-    }
-
-    .content-section {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        margin-top: 20px; /* Espaço adicional para evitar sobreposição */
-        text-align: center;
-    }
-    
-    .main-section {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin-top: 50px; /* Espaço para o menu */
-        padding: 20px;
-        text-align: center;
-    }
-    
-    .content-section, .main-section {
-        margin-left: 0;
-    }
-}
-
-/* Blog Container */
-.blog-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    padding: 20px;
-    justify-items: center;
-}
-
-.blog-card {
-    width: 100%;
-    max-width: 300px;
-    border: 2px solid #53ffdd; /* Borda com cor personalizada */
-    border-radius: 10px; /* Bordas arredondadas */
-    overflow: hidden;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(83, 255, 221, 0.7); /* Sombra sólida na cor especificada */
-}
-
-.blog-card img {
-    width: 100%;
-    height: auto;
-    border-bottom: 2px solid #53ffdd; /* Linha de separação entre imagem e título */
-}
-
-.blog-card h3 {
-    margin: 0;
-    padding: 15px;
-    font-size: 18px;
-    color: #53ffdd; /* Cor do título */
-}
-
-@media (max-width: 768px) {
-    .blog-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    .blog-container {
-        grid-template-columns: 1fr;
-        gap: 10px; /* Reduzindo o espaçamento em telas menores */
-    }
-}
-
-/* Footer */
-.footer {
-    background-color: #2e2e2e;
-    text-align: center;
-    padding: 20px;
-}
-
-.footer-content {
-    font-size: 14px;
-    color: #fff;
-}
-</style>
+            #direcionais {
+                bottom: 80px; /* Ajuste para telas menores */
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav class="sidebar">
-        <div class="btn-expandir">
-            <i class="bi bi-list" id="btn-exp"></i>
-        </div>
-        <ul>
-            <li class="item-menu home">
-                <a href="#">
-                    <span class="icon"><i class="bi bi-house-fill"></i></span>
-                    <span class="txt-link">Home</span>
-                </a>
-            </li>
-            <li class="item-menu portfolio">
-                <a href="portifolio.html">
-                    <span class="icon"><i class="bi bi-lightbulb-fill"></i></span>
-                    <span class="txt-link">Portfólio</span>
-                </a>
-            </li>            
-            <li class="item-menu ativo">
-                <a href="blog.html">
-                    <span class="icon"><i class="bi bi-journal-bookmark-fill"></i></span>
-                    <span class="txt-link">Blog</span>
-                </a>
-            </li>
-            <li class="item-menu">
-                <a href="contato.html">
-                    <span class="icon"><i class="bi bi-phone-vibrate-fill"></i></span>
-                    <span class="txt-link">Contato</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-    <div class="blog-container">
-        <div class="blog-card">
-            <img src="imagem1.jpg" alt="Imagem 1">
-            <h3>6 Passos para Criar uma Identidade Visual que Cativa</h3>
-            <ul>
-                <li>
-                    1. Descubra o Coração do Seu Cliente
-                    Antes de começar, entre na cabeça do seu cliente. Entender seus desejos e objetivos é fundamental. Pergunte-se: Qual é o propósito da marca? Quem são seus clientes? Use questionários simples para captar essas respostas. Perguntas úteis podem incluir:
-                    
-                    Qual imagem você quer que sua marca passe?
-                    Como você quer que seus clientes se sintam quando pensam na sua marca?
-                </li>
-                <li>
-                    2. Espie a Concorrência
-                    Conheça o campo de batalha! Analise seus concorrentes e identifique o que eles estão fazendo. Isso não é para copiar, mas para encontrar formas de se destacar. Ao entender o que já existe, você pode criar algo novo e inovador.
-                </li>
-                <li>
-                    3. Escolha os Ingredientes Certos: Cores e Fontes
-                    As cores são mais do que apenas estética; elas criam emoções. Selecione cores que representem a personalidade da marca e ressoem com o público-alvo. O mesmo vale para fontes – elas devem ser fáceis de ler e combinar com o tom da marca. Pense em qual emoção cada cor e tipo de letra transmite.
-                </li>
-                <li>
-                    4. Crie um Logotipo que Cause Impacto
-                    Seu logotipo é o rosto da marca. Ele deve ser simples, memorável e expressar a essência da marca em um único símbolo. Lembre-se de que um bom logotipo deve funcionar em diferentes tamanhos e contextos – de cartões de visita a outdoors.
-                </li>
-                <li>
-                    5. Defina Regras e Siga Elas
-                    Crie um guia de identidade visual. Este documento servirá como um manual para todos os usos do logo, cores, fontes e estilo gráfico. Isso garante que a marca seja reconhecida, independente de onde ela aparecer.
-                </li>
-                <li>
-                    6. Teste, Aprenda e Evolua
-                    Depois que a identidade visual estiver no mundo, observe como ela é recebida. Peça feedback, analise resultados e esteja disposto a ajustar o que for necessário. Identidades visuais não são estáticas – elas evoluem com o tempo e as mudanças no mercado.
-                </li>
-            </ul>
-            <p>
-                Conclusão: Conquiste o Coração do Seu Público
-                Uma identidade visual eficaz é mais do que apenas boa aparência. Ela constrói conexões emocionais e faz o público lembrar e confiar na sua marca. Então, siga esses passos e veja sua marca brilhar no mercado!
-            </p>
-        </div>
-        <div class="blog-card">
-            <img src="imagem2.jpg" alt="Imagem 2">
-            <h3>Título da Matéria 2</h3>
-        </div>
-        <div class="blog-card">
-            <img src="imagem3.jpg" alt="Imagem 3">
-            <h3>Título da Matéria 3</h3>
-        </div>
-        <!-- Adicione mais quadros conforme necessário -->
+    <div id="loading">Carregando...</div>
+
+    <div id="jogo-container" style="display: none;"></div>
+
+    <div id="popup">
+        <h1 id="popup-title">Parabéns! Você destruiu essa página!</h1>
+        <p id="popup-message">Levou apenas: <span id="time"></span> segundos</p>
+        <button onclick="closePopup()">Fechar</button>
     </div>
-        <!-- Script -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-        <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const btnExpandir = document.querySelector(".btn-expandir");
-    const sidebar = document.querySelector(".sidebar");
-    const menuItems = document.querySelectorAll("ul li.item-menu");
 
-    btnExpandir.addEventListener("click", function() {
-        sidebar.classList.toggle("expandir");
-    });
+    <!-- Botões direcionais -->
+    <div id="direcionais">
+        <button id="btn-up">↑</button>
+        <button id="btn-left">←</button>
+        <button id="btn-right">→</button>
+        <button id="btn-down">↓</button>
+    </div>
 
-    menuItems.forEach(function(item) {
-        item.addEventListener("click", function() {
-            // Remove a classe ativo de todos os itens
-            menuItems.forEach(function(menuItem) {
-                menuItem.classList.remove("ativo");
-            });
-            // Adiciona a classe ativo ao item clicado
-            item.classList.add("ativo");
-        });
-    });
+    <footer>
+        <div id="botoes-rodape">
+            <button id="btn-destruir">DESTRUIR</button>
+            <button id="btn-portfolio">
+                <a href="portifolio.html">PORTFÓLIO</a>
+            </button>
+        </div>
+    </footer>
 
-    // Carregar as animações
-    var anim1 = lottie.loadAnimation({
-        container: document.getElementById('lottie1'),
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        path: 'https://lottie.host/a8d837bf-f53c-44a9-ac38-89a10bea62ff/AED9Pe29cS.json'
-    });
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script>
+        let snake = [];
+        let snakeLength = 2;
+        let snakeSize = 10;
+        let direction = 'RIGHT';
+        let textChars = [];
+        let gameOver = false;
+        let startTime;
+        let gameStarted = false;
+        let fireworks = [];
+        let margin = 150;
 
-    var anim2 = lottie.loadAnimation({
-        container: document.getElementById('lottie2'),
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        path: 'https://lottie.host/bcc4a533-79f0-4dca-a31b-41aa24b2746e/YhvtBMR1Rd.json'
-    });
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('jogo-container');
+            frameRate(15);
+            noCursor();
+            textAlign(CENTER, CENTER);
+            textSize(35);
+            startTime = millis();
 
-    var anim3 = lottie.loadAnimation({
-        container: document.getElementById('lottie3'),
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        path: 'https://lottie.host/ca043d56-1d85-4ef0-990a-a8cd772f7665/D1fTVglEg5.json'
-    });
+            let textToDisplay = "Sou Barbara Maia, designer gráfica e web. Transformando ideias em realidade visual, criando designs únicos que refletem a essência de cada marca. Ofereço soluções criativas e personalizadas, fortalecendo a comunicação visual dos meus clientes. Vamos conversar e descobrir como posso ajudar a elevar sua marca?";
+            let lines = formatText(textToDisplay, width - 250);
+            let totalTextHeight = lines.length * (textAscent() + textDescent());
+            let startY = (height - totalTextHeight) / 2;
 
-    var anim4 = lottie.loadAnimation({
-        container: document.getElementById('lottie4'),
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        path: 'https://lottie.host/57124dde-ce2b-4669-afda-bc216da2032b/y13ygYAY78.json'
-    });
+            textChars = [];
+            for (let i = 0; i < lines.length; i++) {
+                let currentLine = lines[i];
+                let currentX = width / 2 - textWidth(currentLine) / 2;
+                let currentY = startY + i * (textAscent() + textDescent());
 
-    // Adicionar eventos de hover para as animações
-    document.getElementById('lottie1').addEventListener('mouseenter', function() {
-        anim1.play();
-    });
-    document.getElementById('lottie1').addEventListener('mouseleave', function() {
-        anim1.stop();
-    });
+                for (let j = 0; j < currentLine.length; j++) {
+                    let char = currentLine[j];
+                    let charWidth = textWidth(char);
+                    textChars.push({ text: char, x: currentX, y: currentY, width: charWidth, height: textAscent() + textDescent() });
+                    currentX += charWidth;
+                }
+            }
 
-    document.getElementById('lottie2').addEventListener('mouseenter', function() {
-        anim2.play();
-    });
-    document.getElementById('lottie2').addEventListener('mouseleave', function() {
-        anim2.stop();
-    });
+            // Inicializar a cobrinha
+            snake = [];
+            for (let i = 0; i < snakeLength; i++) {
+                snake.push(createVector(i * snakeSize, height / 2)); // Posição inicial no meio da tela
+            }
 
-    document.getElementById('lottie3').addEventListener('mouseenter', function() {
-        anim3.play();
-    });
-    document.getElementById('lottie3').addEventListener('mouseleave', function() {
-        anim3.stop();
-    });
-
-    document.getElementById('lottie4').addEventListener('mouseenter', function() {
-        anim4.play();
-    });
-    document.getElementById('lottie4').addEventListener('mouseleave', function() {
-        anim4.stop();
-    });
-});
-
-const canvas = document.getElementById('smokeCanvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-const particlesArray = [];
-const colors = ['#8600ff', '#00ffdc'];
-
-// Função para criar uma nova partícula
-function Particle(x, y) {
-    this.x = x;
-    this.y = y;
-    this.size = Math.random() * 20 + 10; // Tamanho aleatório entre 10 e 30
-    this.speedX = Math.random() * 3 - 1.5; // Velocidade de -1.5 a 1.5
-    this.speedY = Math.random() * 3 - 1.5;
-    this.color = colors[Math.floor(Math.random() * colors.length)];
-}
-
-// Método para desenhar a partícula
-Particle.prototype.draw = function() {
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fill();
-};
-
-// Método para atualizar a posição da partícula
-Particle.prototype.update = function() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    if (this.size > 0.2) this.size -= 0.1; // Gradualmente reduzir o tamanho
-};
-
-// Função para adicionar novas partículas
-function addParticles(event) {
-    const x = event.x;
-    const y = event.y;
-    for (let i = 0; i < 5; i++) {
-        particlesArray.push(new Particle(x, y));
-    }
-}
-
-// Função para animar as partículas
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < particlesArray.length; i++) {
-        particlesArray[i].update();
-        particlesArray[i].draw();
-
-        // Remover partículas quando se tornam muito pequenas
-        if (particlesArray[i].size <= 0.2) {
-            particlesArray.splice(i, 1);
-            i--;
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('jogo-container').style.display = 'block';
         }
-    }
-    requestAnimationFrame(animate);
-}
 
-window.addEventListener('mousemove', addParticles);
-animate();
+        function moveSnake() {
+            let head = snake[snake.length - 1].copy(); // Cabeça da cobra
 
-</script>
+            if (direction === 'RIGHT') head.x += snakeSize;
+            else if (direction === 'LEFT') head.x -= snakeSize;
+            else if (direction === 'UP') head.y -= snakeSize;
+            else if (direction === 'DOWN') head.y += snakeSize;
+
+            // Verifica colisão com as bordas e com a própria cobra
+            if (head.x < 0 || head.x >= width || head.y < 0 || head.y >= height || snakeCollision(head)) {
+                gameOver = true;
+                return;
+            }
+
+            let ateSomething = false;
+            let buffer = 10;
+
+            for (let i = textChars.length - 1; i >= 0; i--) {
+                let t = textChars[i];
+                let charWidth = Math.max(t.width, 35);
+                let charHeight = Math.max(t.height, 40);
+
+                if (head.x < t.x + charWidth + buffer && head.x + snakeSize > t.x - buffer && 
+                    head.y < t.y + charHeight + buffer && head.y + snakeSize > t.y - buffer) {
+                    textChars.splice(i, 1);
+                    ateSomething = true;
+                    break;
+                }
+            }
+
+            snake.push(head);
+
+            if (!ateSomething) {
+                snake.shift();
+            }
+        }
+
+        function snakeCollision(head) {
+            for (let i = 0; i < snake.length - 1; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function draw() {
+            background(0);
+
+            if (!gameStarted) {
+                fill(255);
+                noStroke();
+                for (let t of textChars) {
+                    text(t.text, t.x, t.y);
+                }
+                return;
+            }
+
+            if (gameOver) {
+                background(0);
+                fill(255, 0, 0);
+                textAlign(CENTER, CENTER);
+                text("Game Over", width / 2, height / 2);
+
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+
+                return;
+            }
+
+            // Verifica se todas as letras foram comidas
+            if (textChars.length === 0) {
+                if (fireworks.length === 0) {
+                    createFireworks(); // Cria os fogos de artifício
+                }
+
+                // Exibe a mensagem de vitória
+                fill(255);
+                textSize(40);
+                textAlign(CENTER, CENTER);
+                text("PARABÉNS, VOCÊ VENCEU!", width / 2, height / 2);
+
+                // Exibe os fogos de artifício
+                for (let part of fireworks) {
+                    part.update();
+                    part.show();
+                }
+
+                return; // Para de executar o restante do código
+            }
+
+            // Desenha as letras restantes
+            noStroke();
+            for (let t of textChars) {
+                fill(255);
+                text(t.text, t.x, t.y);
+            }
+
+            // Move e desenha a cobrinha
+            moveSnake();
+            fill(83, 255, 221);
+            for (let i = 0; i < snake.length; i++) {
+                rect(snake[i].x, snake[i].y, snakeSize, snakeSize);
+            }
+        }
+
+        function keyPressed() {
+            if (keyCode === UP_ARROW && direction !== 'DOWN') direction = 'UP';
+            else if (keyCode === DOWN_ARROW && direction !== 'UP') direction = 'DOWN';
+            else if (keyCode === LEFT_ARROW && direction !== 'RIGHT') direction = 'LEFT';
+            else if (keyCode === RIGHT_ARROW && direction !== 'LEFT') direction = 'RIGHT';
+            if (!gameStarted) gameStarted = true;
+        }
+
+        // Adicionando eventos de clique para os botões direcionais
+        document.getElementById('btn-up').addEventListener('click', () => {
+            if (direction !== 'DOWN') direction = 'UP';
+            if (!gameStarted) gameStarted = true;
+        });
+
+        document.getElementById('btn-down').addEventListener('click', () => {
+            if (direction !== 'UP') direction = 'DOWN';
+            if (!gameStarted) gameStarted = true;
+        });
+
+        document.getElementById('btn-left').addEventListener('click', () => {
+            if (direction !== 'RIGHT') direction = 'LEFT';
+            if (!gameStarted) gameStarted = true;
+        });
+
+        document.getElementById('btn-right').addEventListener('click', () => {
+            if (direction !== 'LEFT') direction = 'RIGHT';
+            if (!gameStarted) gameStarted = true;
+        });
+
+        function createFireworks() {
+            for (let i = 0; i < 100; i++) {
+                fireworks.push(new Firework(random(width), random(height)));
+            }
+        }
+
+        class Firework {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = random(-2, 2);
+                this.vy = random(-2, 2);
+                this.alpha = 255;
+                this.color = random([color(134, 0, 255), color(0, 255, 220)]);
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= 2; // Diminuir a opacidade para desaparecer gradualmente
+            }
+
+            show() {
+                noStroke();
+                fill(red(this.color), green(this.color), blue(this.color), this.alpha);
+                ellipse(this.x, this.y, 10);
+            }
+        }
+
+        document.getElementById('btn-destruir').addEventListener('click', () => {
+            anime({
+                targets: textChars,
+                x: function () {
+                    return anime.random(margin, width - margin);
+                },
+                y: function () {
+                    return anime.random(margin, height - margin);
+                },
+                easing: 'easeInOutExpo',
+                duration: 1500
+            });
+        });
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function formatText(str, maxWidth) {
+            let words = str.split(' ');
+            let formattedText = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                let word = words[i];
+                let width = textWidth(currentLine + ' ' + word);
+                if (width < maxWidth) {
+                    currentLine += ' ' + word;
+                } else {
+                    formattedText.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            formattedText.push(currentLine);
+            return formattedText;
+        }
+    </script>
 </body>
 </html>
